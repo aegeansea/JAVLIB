@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
 
 
-import SQL,JA_Name
+import SQL,JA_Name,JA_Movies
 import requests
-from lxml import etree
+# from lxml import etree
 
 class SpiderJAV:
     def __init__(self,baseUrl,filePath):
@@ -11,73 +11,57 @@ class SpiderJAV:
         self.filePath = filePath
         self.ja_name = JA_Name.JA_Name(baseUrl)
         self.sql = SQL.SQL()
+        self.ja_movies = JA_Movies.JA_Movies(baseUrl,filePath)
 
 
-
-    def getMovieListFromName(self,nameUrl):
-        pageURL = self.baseUrl + nameUrl
-        # print pageURL
+    def getNamesFromJavLib(self):
         try:
-            webPage = self.session.get(pageURL,timeout = 180)
-            selector = etree.HTML(webPage.text)
-            movieUrlList = selector.xpath(r'//div/div[*]/div/div/div/a/@href') #影片url
-            # movieNameList = selector.xpath('//div/div/div/a/@title') #影片名字
-            # print webPage.status_code
-            return movieUrlList
-        except requests.exceptions.RequestException as e:
-            print e
+            # 首次执行如果没有建表就创建表格
+            self.sql.createTable()
+        except:
+            preFix = self.ja_name.getAllPreFix()
+            for char in preFix:
+                print char
+                page = self.ja_name.getPreFixPage(char)
+                maxNum = self.ja_name.getMaxPageNumWithPrefix(page)
+                index = 1
+                while index <= int(maxNum):
+                    url = self.ja_name.getWebPage(char, index)
+                    index += 1
+                    (nameUrlList, nameList) = self.ja_name.getAllNameFromPageUrl(url)
+                    self.sql.insertNameAndNameURL(nameUrlList, nameList)
+
+
+    # def getMoviesWithName(self):
+    # http://www.j9lib.com/cn/vl_star.php?&mode=2&s=ayote
+    def getFanHaoUrl(self):
+        try:
+            # 首次执行如果没有建表就创建表格
+            self.sql.createMovieUrlTable()
+        except:
+            maxIndex = self.sql.quaryMaxIndex()
+            for index in xrange(maxIndex):
+                # 数据库中ID为 1-37798,如果断了就改下for循环启示标志位,从这一位演员开始
+                (nameUrl,name) = self.sql.quaryNameUrlFromDB(index + 1)
+                defPage = self.ja_movies.getDefaultPage(nameUrl)  #第一页
+                maxNum = self.ja_movies.getMaxPageNumWithPrefix(defPage) #获取最大页码
+                print name
+                print '页数' + str(maxNum)
+                maxNum += 1
+                for pageIndex in xrange(1,maxNum):
+                    moviePageUrl = self.ja_movies.getMoviePageFromPageNum(nameUrl,pageIndex)
+                    movieUrls = self.ja_movies.getMovieUrlFromPageUrl(moviePageUrl)
+                    self.sql.insertNameAndMovieURL(name,movieUrls)
+
 
 
 # http://www.j9lib.com/cn/vl_star.php?&mode=&s=azccm&page=1
-
-base = 'http://www.j9lib.com/cn/'
-filePath = '/Users/mbp/Desktop/JA'
+base = 'http://www.javl10.com/cn/'
+filePath = '/Users/mbp/Desktop/JA/'
 spider = SpiderJAV(base,filePath)
-preFix = spider.ja_name.getAllPreFix()
-try:
-    spider.sql.createTable()
-except:
-    for char in preFix:
-        print char
-        page = spider.ja_name.getPreFixPage(char)
-        maxNum = spider.ja_name.getMaxPageNumWithPrefix(page)
-        index = 1
-        while index <= int(maxNum):
-            url = spider.ja_name.getWebPage(char, index)
-            index += 1
-            (nameUrlList, nameList) = spider.ja_name.getAllNameFromPageUrl(url)
-            spider.sql.insertNameAndNameURL(nameUrlList, nameList)
+# nameUrl = spider.sql.quaryNameUrlFromDB(1)
+# spider.getNamesFromJavLib()
+spider.getFanHaoUrl()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# nameYZ = spider.ja_name.getAllNameFromPage('A')
-# nameUrlList = nameYZ[0]
-# nameList = nameYZ[1]
-
-# for index in range(len(nameUrlList)):
-#     nameUrl = nameUrlList[index].split('?')[1]
-#     name = nameList[index].text
-#     print nameList[index].text + ' : ' + nameUrl
-#     spider.sql.insertNameAndNameURL(name,nameUrl)
-
-# for nameUrl in nameUrlList:
-#     name = nameUrl.split('?')[1]
-#     print '演员' + name
-#     pageIndex = 2
-#     n = 'vl_star.php?&mode=&' + name + '&page=' + str(pageIndex)
-#     movieUrlList = spider.getMovieListFromName(n)
-#     if len(movieUrlList) >0 :
-#         print movieUrlList

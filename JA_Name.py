@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 
 
-import SQL
 import requests
 from lxml import etree
 
