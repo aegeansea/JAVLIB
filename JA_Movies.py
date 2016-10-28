@@ -47,16 +47,15 @@ class JA_Movies(object):
     def getMoviePageFromPageNum(self,nameUrl,pageNum):
         u1 = nameUrl.split('?')[0]
         u2 = nameUrl.split('?')[1]
-        print '第' + str(pageNum) + '页'
         pageUrl = self.baseUrl + u1 + '?&mode=2&' + u2 + '&page=' + str(pageNum)
-        print pageUrl
+        print  '第' + str(pageNum) + '页' + ' ' + str(pageUrl)
         return pageUrl
 
     # 获取第x页面上的所有movieUrl
     def getMovieUrlFromPageUrl(self,pageUrl):
         for i in xrange(10):
             try:
-                webPage = self.session.get(pageUrl,timeout=20)
+                webPage = self.session.get(pageUrl,timeout=10)
                 selector = etree.HTML(webPage.text)
                 movieList = selector.xpath(r'//div/div/div/a/@href')
                 movieUrls = set()

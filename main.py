@@ -40,12 +40,12 @@ class SpiderJAV:
             self.sql.createMovieUrlTable()
         except:
             maxIndex = self.sql.quaryMaxIndex()
-            for index in xrange(maxIndex):
+            for index in xrange(36317,37799):
                 # 数据库中ID为 1-37798,如果断了就改下for循环启示标志位,从这一位演员开始
                 (nameUrl,name) = self.sql.quaryNameUrlFromDB(index + 1)
                 defPage = self.ja_movies.getDefaultPage(nameUrl)  #第一页
                 maxNum = self.ja_movies.getMaxPageNumWithPrefix(defPage) #获取最大页码
-                print name
+                print str(index) + '  ' +  name
                 print '页数' + str(maxNum)
                 maxNum += 1
                 for pageIndex in xrange(1,maxNum):

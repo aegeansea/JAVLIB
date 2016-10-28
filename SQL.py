@@ -29,13 +29,13 @@ class SQL(object):
             print name + ' : ' + nameUrl
             self.cursor.execute("INSERT INTO JA_NAME (NAME,NAME_URL) VALUES (?,?)",(name,nameUrl))
         self.conn.commit()
-        print 'insert nameUrl sqlite suceess'
+        # print 'insert nameUrl sqlite suceess'
 
     def insertNameAndMovieURL(self,name,movieUrlList):
         for url in movieUrlList:
             self.cursor.execute("INSERT INTO JA_MOVIE_URL (NAME,MOVIE_URL) VALUES (?,?)",(name,url))
         self.conn.commit()
-        print 'insert movieUrl sqlite suceess'
+        # print 'insert movieUrl sqlite suceess'
 
 
 
