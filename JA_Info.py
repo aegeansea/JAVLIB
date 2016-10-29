@@ -2,6 +2,7 @@
 
 import requests
 from lxml import etree
+from bs4 import BeautifulSoup
 
 class JA_Info(object):
     def __init__(self,bUrl):
@@ -11,10 +12,12 @@ class JA_Info(object):
 
     def getMoviePageFromUrl(self,url):
         pageUrl = self.baseUrl + url
+        print pageUrl
         for i in xrange(10):
             try:
                 webPage = self.session.get(pageUrl, timeout=10)
-                return webPage
+                # print webPage.text
+                return webPage.text
             except requests.exceptions.Timeout as te:
                 print te
                 pass
@@ -22,31 +25,48 @@ class JA_Info(object):
                 print e
                 pass
 
-    def getInfoFromMoviePage(self,mPage):
-        selector = etree.HTML(mPage.text)
-        fanHao = selector.xpath(r'//*[@id="video_id"]/table/tbody/tr/td[2]')
-        haiBao = selector.xpath(r'//*[@id="video_jacket_img"]/@src')
-        pinFen = selector.xpath(r'//*[@id="video_review"]/table/tbody/tr/td[2]/span[2]')
-        riQi = selector.xpath(r'//*[@id="video_date"]/table/tbody/tr/td[2]')
-        shiChang = 
 
-#番号 ABP-525
-#//*[@id="video_id"]/table/tbody/tr/td[2]
-# 海报图片地址
-#//*[@id="video_jacket_img"]/@src
-#评分 (9.4)
-#//*[@id="video_review"]/table/tbody/tr/td[2]/span[2]
-#日期 2016-10-11
-#//*[@id="video_date"]/table/tbody/tr/td[2]
-#影片时长
-#//*[@id="video_length"]/table/tbody/tr/td[2]
-#演员
-#//span/span[1]/a
-#影片类型
-#//*[@id="video_genres"]/table/tbody/tr/td[2]
-#想要这个影片
-#//*[@id="subscribed"]/a
-#看过这个影片
-#//*[@id="watched"]/a
-#拥有这个影片
-#//*[@id="owned"]/a
+
+
+
+    def getInfoFromMoviePage(self,mPage):
+        soup = BeautifulSoup(mPage,"html.parser")
+        SBM = soup.select('div[id="video_id"]')[0].text
+        FH = SBM.split(':')
+        fanHao = str(FH[1]).strip()
+        print '番号' + ' ' + fanHao
+        RQ = soup.select('div[id="video_date"]')[0].text
+        riQi = str(RQ.split(':')[1]).strip()
+        print '发行日期' + ' ' + riQi
+        CD = soup.select('div[id="video_length"]')[0].text
+        changDU = CD.split(':')[1].strip()
+        print  changDU
+        DY = soup.select('div[id="video_director"]')[0].text
+        daoYan = DY.split(':')[1].strip()
+        print daoYan
+        ZZS = soup.select('div[id="video_maker"]')[0].text
+        zhiZuoShang = ZZS.split(':')[1].strip()
+        print zhiZuoShang
+        FXS = soup.select('div[id="video_label"]')[0].text
+        faXingShang = FXS.split(':')[1].strip()
+        print faXingShang
+        PJ = soup.select('span[class="score"]')[0].text
+        pinFen = PJ[1:4]
+        print pinFen
+        LB = soup.select('div[id="video_genres"]')[0].text
+        leiBie = LB.split(':')[1].strip()
+        print leiBie
+        YY = soup.select('div[id="video_cast"]')[0].text
+        yanYuanLieBiao = YY.split(':')[1].strip()
+        print yanYuanLieBiao
+        SUBSCRIBED = soup.select('span[id="subscribed"]')[0].text
+        xiangYao = SUBSCRIBED.split('(')[1].split(' ')[0]
+        print xiangYao
+        WATCHED = soup.select('span[id="watched"]')[0].text
+        kanGuo = WATCHED.split('(')[1].split(' ')[0]
+        print kanGuo
+        OWNED = soup.select('span[id="owned"]')[0].text
+        yongYOU = OWNED.split('(')[1].split(' ')[0]
+        print yongYOU
+        Info = (fanHao,riQi,changDU,daoYan,zhiZuoShang,faXingShang,pinFen,leiBie,yanYuanLieBiao,xiangYao,kanGuo,yongYOU)
+        return Info

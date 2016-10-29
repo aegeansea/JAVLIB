@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 
-import SQL,JA_Name,JA_Movies
+import SQL,JA_Name,JA_Movies,JA_Info
 import requests
 # from lxml import etree
 
@@ -12,6 +12,7 @@ class SpiderJAV:
         self.ja_name = JA_Name.JA_Name(baseUrl)
         self.sql = SQL.SQL()
         self.ja_movies = JA_Movies.JA_Movies(baseUrl,filePath)
+        self.ja_info = JA_Info.JA_Info(baseUrl)
 
 
     def getNamesFromJavLib(self):
@@ -53,15 +54,23 @@ class SpiderJAV:
                     movieUrls = self.ja_movies.getMovieUrlFromPageUrl(moviePageUrl)
                     self.sql.insertNameAndMovieURL(name,movieUrls)
 
+    def getMovieInfo(self):
+        for index in xrange(1,599837):
+            mUrl = self.sql.quaryUrlFromIndex(index)
+            page = self.ja_info.getMoviePageFromUrl(mUrl)
+            self.ja_info.getInfoFromMoviePage(page)
+
 
 
 # http://www.j9lib.com/cn/vl_star.php?&mode=&s=azccm&page=1
-base = 'http://www.javl10.com/cn/'
+base = 'http://www.javl10.com/cn'
 filePath = '/Users/mbp/Desktop/JA/'
 spider = SpiderJAV(base,filePath)
 # nameUrl = spider.sql.quaryNameUrlFromDB(1)
 # spider.getNamesFromJavLib()
-spider.getFanHaoUrl()
-
-
+# spider.getFanHaoUrl()
+# spider.getMovieInfo()
+# spider.ja_name.getAllPreFix()
+page = spider.ja_info.getMoviePageFromUrl('?v=javlii3j34')
+spider.ja_info.getInfoFromMoviePage(page)
 

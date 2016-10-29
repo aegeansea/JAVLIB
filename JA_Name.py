@@ -17,6 +17,7 @@ class JA_Name(object):
         webPage = self.session.get(prefixUrl)
         selector = etree.HTML(webPage.text)
         preFixList = selector.xpath(r'//*[@id="rightcolumn"]/div[2]/a')
+        # print preFixList
         preFixListText = ['A']
         for name in preFixList:
             preFixListText.append(name.text)
