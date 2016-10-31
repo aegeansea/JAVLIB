@@ -21,27 +21,6 @@ class SQL(object):
                        MOVIE_URL       TEXT);''')
         print 'create table JA_MOVIE_URL success'
 
-    # 番号 ABP-525
-    # //*[@id="video_id"]/table/tbody/tr/td[2]
-    # 海报图片地址
-    # //*[@id="video_jacket_img"]/@src
-    # 评分 (9.4)
-    # //*[@id="video_review"]/table/tbody/tr/td[2]/span[2]
-    # 日期 2016-10-11
-    # //*[@id="video_date"]/table/tbody/tr/td[2]
-    # 影片时长
-    # //*[@id="video_length"]/table/tbody/tr/td[2]
-    # 演员
-    # //span/span[1]/a
-    # 影片类型
-    # //*[@id="video_genres"]/table/tbody/tr/td[2]
-    # 想要这个影片
-    # //*[@id="subscribed"]/a
-    # 看过这个影片
-    # //*[@id="watched"]/a
-    # 拥有这个影片
-    # //*[@id="owned"]/a
-
     def createMovieInfoTable(self):
         self.conn.execute('''CREATE TABLE JA_MOVIE_INFO
                        (ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,9 +81,27 @@ class SQL(object):
 
     #保存影片信息
     def insertMovieInfo(self,info):
-        # Info = (fanHao,riQi,changDU,daoYan,zhiZuoShang,faXingShang,pinFen,leiBie,yanYuanLieBiao,xiangYao,kanGuo,yongYOU)
+        imageUrl = info[0]
+        fanHao = info[1]
+        riQi = info[2]
+        changDu = info[3]
+        daoYan = info[4]
+        zhiZuoShang = info[5]
+        faXingShang = info[6]
+        pinFen = info[7]
+        leiBie = info[8]
+        yanYuanLieBiao = info[9]
+        xiangYao = info[10]
+        kanGuo = info[11]
+        yongYou = info [12]
+        self.cursor.execute("INSERT INTO JA_MOVIE_INFO (IMAGE_URL,FANHAO,RIQI,CHANGDU,DAOYAN,ZHIZUOSHANG,FAXINGSHANG,PINFEN,LEIBIE,YANYUANLIEBIAO,XIANGYAO,KANGUO,YONGYOU) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",(imageUrl,fanHao,riQi,changDu,daoYan,zhiZuoShang,faXingShang,pinFen,leiBie,yanYuanLieBiao,xiangYao,kanGuo,yongYou))
+        self.conn.commit()
+        # print 'insert movie_info sqlite suceess'
 
-        self.cursor.execute("INSERT INTO JA_NAME (NAME,NAME_URL) VALUES (?,?)", (name, nameUrl))
+
+
+
+
 
 
 

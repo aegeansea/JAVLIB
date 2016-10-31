@@ -12,8 +12,8 @@ class JA_Info(object):
 
     def getMoviePageFromUrl(self,url):
         pageUrl = self.baseUrl + url
-        # print pageUrl
-        for i in xrange(10):
+        print pageUrl
+        for i in xrange(5):
             try:
                 webPage = self.session.get(pageUrl, timeout=10)
                 # print webPage.text
@@ -31,6 +31,11 @@ class JA_Info(object):
 
     def getInfoFromMoviePage(self,mPage):
         soup = BeautifulSoup(mPage,"html.parser")
+
+        HB = soup.select('img[id="video_jacket_img"]')[0]
+        imageUrl = HB['src']
+        # print '海报' + ' '  + str(imageUrl)
+
         SBM = soup.select('div[id="video_id"]')[0].text
         FH = SBM.split(':')
         fanHao = str(FH[1]).strip()
@@ -68,5 +73,5 @@ class JA_Info(object):
         OWNED = soup.select('span[id="owned"]')[0].text
         yongYOU = OWNED.split('(')[1].split(' ')[0]
         # print yongYOU
-        Info = (fanHao,riQi,changDU,daoYan,zhiZuoShang,faXingShang,pinFen,leiBie,yanYuanLieBiao,xiangYao,kanGuo,yongYOU)
+        Info = (imageUrl,fanHao,riQi,changDU,daoYan,zhiZuoShang,faXingShang,pinFen,leiBie,yanYuanLieBiao,xiangYao,kanGuo,yongYOU)
         return Info
