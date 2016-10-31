@@ -58,8 +58,9 @@ class SpiderJAV:
         for index in xrange(1,599837):
             mUrl = self.sql.quaryUrlFromIndex(index)
             page = self.ja_info.getMoviePageFromUrl(mUrl)
-            self.ja_info.getInfoFromMoviePage(page)
+            result = self.ja_info.getInfoFromMoviePage(page)
 
+            print result
 
 
 # http://www.j9lib.com/cn/vl_star.php?&mode=&s=azccm&page=1
@@ -69,8 +70,8 @@ spider = SpiderJAV(base,filePath)
 # nameUrl = spider.sql.quaryNameUrlFromDB(1)
 # spider.getNamesFromJavLib()
 # spider.getFanHaoUrl()
-# spider.getMovieInfo()
+spider.getMovieInfo()
 # spider.ja_name.getAllPreFix()
-page = spider.ja_info.getMoviePageFromUrl('?v=javlii3j34')
-spider.ja_info.getInfoFromMoviePage(page)
+# page = spider.ja_info.getMoviePageFromUrl('?v=javlii3j34')
+# spider.ja_info.getInfoFromMoviePage(page)
 

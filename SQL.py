@@ -100,3 +100,11 @@ class SQL(object):
         print str(index) + '   ' +name
         return movieUrl
 
+    #保存影片信息
+    def insertMovieInfo(self,info):
+        # Info = (fanHao,riQi,changDU,daoYan,zhiZuoShang,faXingShang,pinFen,leiBie,yanYuanLieBiao,xiangYao,kanGuo,yongYOU)
+
+        self.cursor.execute("INSERT INTO JA_NAME (NAME,NAME_URL) VALUES (?,?)", (name, nameUrl))
+
+
+
