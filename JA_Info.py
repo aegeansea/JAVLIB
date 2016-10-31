@@ -12,10 +12,12 @@ class JA_Info(object):
 
     def getMoviePageFromUrl(self,url):
         pageUrl = self.baseUrl + url
-        print pageUrl
-        for i in xrange(5):
+        # print pageUrl
+        for i in xrange(9):
             try:
-                webPage = self.session.get(pageUrl, timeout=10)
+                webPage = requests.get(pageUrl, timeout=10)
+                # webPage = requests.get(pageUrl,timeout=10,proxies=dict(http='socks5://jp1e.banjx.com:15100'))
+
                 # print webPage.text
                 return webPage.text
             except requests.exceptions.Timeout as te:
@@ -39,7 +41,7 @@ class JA_Info(object):
         SBM = soup.select('div[id="video_id"]')[0].text
         FH = SBM.split(':')
         fanHao = str(FH[1]).strip()
-        # print '番号' + ' ' + fanHao
+        print  fanHao
         RQ = soup.select('div[id="video_date"]')[0].text
         riQi = str(RQ.split(':')[1]).strip()
         # print '发行日期' + ' ' + riQi
@@ -55,8 +57,13 @@ class JA_Info(object):
         FXS = soup.select('div[id="video_label"]')[0].text
         faXingShang = FXS.split(':')[1].strip()
         # print faXingShang
-        PJ = soup.select('span[class="score"]')[0].text
-        pinFen = PJ[1:4]
+        try:
+            PJ = soup.select('span[class="score"]')[0].text
+            pinFen = PJ[1:4]
+        except:
+            pinFen = ' '
+            pass
+
         # print pinFen
         LB = soup.select('div[id="video_genres"]')[0].text
         leiBie = LB.split(':')[1].strip()

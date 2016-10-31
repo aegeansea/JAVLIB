@@ -56,11 +56,12 @@ class SpiderJAV:
 
     def getMovieInfo(self,fromIndex,toIndex):
         for index in xrange(fromIndex,toIndex):
-            mUrl = self.sql.quaryUrlFromIndex(index)
-            page = self.ja_info.getMoviePageFromUrl(mUrl)
+            urlName = self.sql.quaryUrlFromIndex(index)
+            name = urlName[1]
+            url = urlName[0]
+            page = self.ja_info.getMoviePageFromUrl(url)
             result = self.ja_info.getInfoFromMoviePage(page)
-            # self.sql.insertMovieInfo(result)
-            # print result
+            self.sql.insertMovieInfo(result,name)
 
 
 # http://www.j9lib.com/cn/vl_star.php?&mode=&s=azccm&page=1
@@ -70,7 +71,11 @@ spider = SpiderJAV(base,filePath)
 # nameUrl = spider.sql.quaryNameUrlFromDB(1)
 # spider.getNamesFromJavLib()
 # spider.getFanHaoUrl()
-spider.getMovieInfo(10000,10002)
+
+spider.getMovieInfo(70412,80000)
+
+
+
 # spider.ja_name.getAllPreFix()
 # page = spider.ja_info.getMoviePageFromUrl('?v=javlii3j34')
 # result = spider.ja_info.getInfoFromMoviePage(page)

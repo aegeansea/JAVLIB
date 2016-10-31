@@ -77,10 +77,10 @@ class SQL(object):
         movieUrl = result[2]
         name = result[1]
         print str(index) + '   ' +name
-        return movieUrl
+        return movieUrl,name
 
     #保存影片信息
-    def insertMovieInfo(self,info):
+    def insertMovieInfo(self,info,name):
         imageUrl = info[0]
         fanHao = info[1]
         riQi = info[2]
@@ -94,7 +94,7 @@ class SQL(object):
         xiangYao = info[10]
         kanGuo = info[11]
         yongYou = info [12]
-        self.cursor.execute("INSERT INTO JA_MOVIE_INFO (IMAGE_URL,FANHAO,RIQI,CHANGDU,DAOYAN,ZHIZUOSHANG,FAXINGSHANG,PINFEN,LEIBIE,YANYUANLIEBIAO,XIANGYAO,KANGUO,YONGYOU) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",(imageUrl,fanHao,riQi,changDu,daoYan,zhiZuoShang,faXingShang,pinFen,leiBie,yanYuanLieBiao,xiangYao,kanGuo,yongYou))
+        self.cursor.execute("INSERT INTO JA_MOVIE_INFO (NAME,IMAGE_URL,FANHAO,RIQI,CHANGDU,DAOYAN,ZHIZUOSHANG,FAXINGSHANG,PINFEN,LEIBIE,YANYUANLIEBIAO,XIANGYAO,KANGUO,YONGYOU) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(name,imageUrl,fanHao,riQi,changDu,daoYan,zhiZuoShang,faXingShang,pinFen,leiBie,yanYuanLieBiao,xiangYao,kanGuo,yongYou))
         self.conn.commit()
         # print 'insert movie_info sqlite suceess'
 
